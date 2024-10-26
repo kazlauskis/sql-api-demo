@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL API</title>
+  </head>
+  <body>
+    <div style="width: 100%; margin-bottom: 70px">
+      This is a *basic* query validation example. SELECT ✔️ FROM ✔️ WHERE ✔️
+      ORDER BY ✔️ LIMIT ✔️ OFFSET ✔️ Everything else is disabled, inc. multiple
+      queries, functions, joins...
+    </div>
+
+    <div style="display: flex; justify-content: center">
+      <textarea style="width: 300px; height: 80px" placeholder="Some SQL here">
+SELECT id FROM records WHERE id = 2 AND created_at BETWEEN '2021' AND '2024' ORDER BY created_at DESC LIMIT 10 OFFSET 10
+    </textarea
+      >
+      <button>Send query</button>
+    </div>
+
+    <h3>Database executed</h3>
+    <code id="deparsed" style="margin-bottom: 70px; width: 100%"></code>
+
+    <h3>AST</h3>
+    <pre>
+      <code
+        id="parsed"
+        style="display: block; margin-bottom: 70px; width: 100%"
+      ></code>
+    </pre>
+
+    <script>
+      const [buttonEl] = document.getElementsByTagName("button");
+      const [inputEl] = document.getElementsByTagName("textarea");
+
+      buttonEl.addEventListener("click", async () => {
+        let res = await fetch(`/query?q=${inputEl.value}`);
+        res = await res.json();
+
+        document.getElementById("deparsed").innerText =
+          res.deparsed || "Rejected";
+
+        document.getElementById("parsed").innerText = JSON.stringify(
+          res.parsed || "Could not parse",
+          null,
+          4
+        );
+      });
+      console.log(inputEl);
+    </script>
+  </body>
+</html>
